@@ -208,7 +208,9 @@ uint16_t CFlowGenListPerThread::rx_burst_astf_software_rss(pkt_dir_t dir, rte_mb
         // Nothing to do on server
         return rx_burst_astf_software_rss_ring(dir, rx_pkts, nb_pkts, false);
     }
-    uint16_t cnt = rx_burst_astf_software_rss_ring(dir, rx_pkts, nb_pkts, m_read_from_redirect_ring);
+    int *x = (int*)malloc(10);
+    free(x);
+        uint16_t cnt = rx_burst_astf_software_rss_ring(dir, rx_pkts, nb_pkts, m_read_from_redirect_ring);
     if (cnt == 0) {
         // The ring that we tried to read from was empty, let's try the other one.
         cnt = rx_burst_astf_software_rss_ring(dir, rx_pkts, nb_pkts, !m_read_from_redirect_ring);
@@ -217,6 +219,7 @@ uint16_t CFlowGenListPerThread::rx_burst_astf_software_rss(pkt_dir_t dir, rte_mb
         // Round Robin, next time read from the other ring.
         m_read_from_redirect_ring = !m_read_from_redirect_ring;
     }
+    free(x);
     return cnt;
 }
 
@@ -248,7 +251,8 @@ bool CFlowGenListPerThread::handle_astf_software_rss(pkt_dir_t dir,
         // Need to handle like all the packets.
         return false;
     }
-
+    int a[4] = {0};
+     a[7] = 3;
     CFlowKeyTuple tuple;
     CFlowKeyFullTuple ftuple;
 
